@@ -15,8 +15,9 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor.PedeComposition
             var binaryFormatter = new BinaryFormatter();
             var file = File.Create(GetFullPath(key));
             var strigValue = JsonUtility.ToJson(value);
+            var compressedValue = StringCompressor.CompressString(strigValue);
         
-            binaryFormatter.Serialize(file, strigValue);
+            binaryFormatter.Serialize(file, compressedValue);
             file.Close();
         }
         
@@ -32,7 +33,9 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor.PedeComposition
             {
                 var binaryFormatter = new BinaryFormatter();
                 var file = File.Open(filePath, FileMode.Open);
-                var obj = JsonUtility.FromJson<T>((string)binaryFormatter.Deserialize(file));
+                var decompressedValue = StringCompressor.DecompressString((string)binaryFormatter.Deserialize(file));
+                var obj = JsonUtility.FromJson<T>(decompressedValue);
+                
                 file.Close();
 
                 if (obj != null) { actionIfHasResult.Invoke(obj); }

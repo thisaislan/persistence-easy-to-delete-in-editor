@@ -1,8 +1,9 @@
-using Thisaislan.PersistenceEasyToDeleteInEditor.PedeComposition;
 using System;
 
 #if UNITY_EDITOR
 using Thisaislan.PersistenceEasyToDeleteInEditor.Editor;
+#else
+using Thisaislan.PersistenceEasyToDeleteInEditor.PedeComposition;
 #endif  
 
 namespace Thisaislan.PersistenceEasyToDeleteInEditor
@@ -33,9 +34,7 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor
             /// <summary> Indicates a persist action on disk after setting it. </summary>
             Persistent
         }
-        
-        private static readonly PedePlayerPrefs PedePlayerPrefs = new PedePlayerPrefs();
-            
+
         #region PlayerPrefsRegion
         
         /// <summary> Saves PlayerPrefs with a specific key, type and value. </summary>
@@ -46,7 +45,9 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor
         ///   <see cref="T:Thisaislan.PersistenceEasyToDeleteInEditor.Pede.PlayerPrefsSetMode" />. 
         ///  Default  PlayerPrefsSetMode.Normal
         /// </param>
-        /// <remarks> It cannot save engine type objects </remarks>
+        /// <remarks>
+        ///   This method may us <see cref="T:UnityEngine.JsonUtility" />, so it may have its limitations.
+        /// </remarks>
         /// <exception cref="ArgumentNullException">
         ///   Key and value cannot be null.
         /// </exception>
@@ -78,6 +79,9 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor
         ///   <see cref="T:Thisaislan.PersistenceEasyToDeleteInEditor.Pede.PlayerPrefsGetMode" />. 
         ///  Default PlayerPrefsGetMode.Normal
         /// </param>
+        /// <remarks>
+        ///   This method may us <see cref="T:UnityEngine.JsonUtility" />, so it may have its limitations.
+        /// </remarks>
         /// <exception cref="ArgumentNullException">
         ///   Key and actionIfHasResult cannot be null.
         /// </exception>
@@ -168,11 +172,13 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor
         /// <summary> Saves file with a specific key, type and value. </summary>
         /// <param name="key"> Key used to set the file. </param>
         /// <param name="value"> Object to be saved or a engine type. </param>
-        /// <remarks> It cannot save engine type objects. </remarks>
+        /// <remarks>
+        ///   This method may us <see cref="T:UnityEngine.JsonUtility" />, so it may have its limitations.
+        /// </remarks>
         /// <exception cref="ArgumentNullException">
         ///   Key and value cannot be null.
         /// </exception>
-        public static void SetFile<T>(string key, T value)
+        public static void SetFile<T>(string key, T value) where T: class
         {
             CheckKeyAsNull(key);
             CheckValueAsNull(value);
@@ -193,6 +199,9 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor
         ///   Action that will be performed if the file does not exist. Default is null
         /// </param>
         /// <param name="destroyAfter"> If true, deletes file after. Default is false </param>
+        /// <remarks>
+        ///   This method may us <see cref="T:UnityEngine.JsonUtility" />, so it may have its limitations.
+        /// </remarks>
         /// <exception cref="ArgumentNullException">
         ///   Key and actionIfHasResult cannot be null.
         /// </exception>
@@ -200,7 +209,7 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor
             string key,
             Action<T> actionIfHasResult,
             Action actionIfHasNotResult = null,
-            bool destroyAfter = false)
+            bool destroyAfter = false) where T: class
         {
             CheckKeyAsNull(key);
             CheckActionAsNull(actionIfHasResult);
@@ -217,7 +226,7 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor
         /// <exception cref="ArgumentNullException">
         ///   Key cannot be null.
         /// </exception>
-        public static void DeleteFile<T>(string key)
+        public static void DeleteFile<T>(string key) where T: class
         {
             CheckKeyAsNull(key);
             
@@ -244,7 +253,7 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor
         /// <exception cref="ArgumentNullException">
         ///   Key and actionWithResult cannot be null.
         /// </exception>
-        public static void HasFileKey<T>(string key, Action<bool> actionWithResult)
+        public static void HasFileKey<T>(string key, Action<bool> actionWithResult) where T: class
         {
             CheckKeyAsNull(key);
             CheckActionAsNull(actionWithResult);
@@ -272,7 +281,7 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor
         }
 
         private static string GetFormattedKey(string key, Type type) =>
-            String.Format(Constants.Consts.PedeKeyFormat, key, type);
+            String.Format(Constants.Consts.PedeKeyFormat, key, type).GetHashCode().ToString();
 
         private static void CheckKeyAsNull(string key) =>
             CheckArgumentAsNull(key, nameof(key));
