@@ -1,6 +1,6 @@
 {
     "name": "thisaislan.persistenceeasytodeleteineditor",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "displayName": "PEDE",
     "description": "A small package to make deleting persistence easier in the editor",
     "documentationUrl": "https://github.com/thisaislan/persistence-easy-to-delete-in-editor",

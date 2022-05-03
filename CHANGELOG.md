@@ -1,5 +1,8 @@
 # Changelog
 
+#### v0.3.0:
+- Add serialization and deserialization methods
+
 #### v0.2.0:
 - Add data compression
 - Use hashcode as keys

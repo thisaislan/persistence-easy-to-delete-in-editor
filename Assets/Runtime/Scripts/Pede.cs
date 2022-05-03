@@ -1,10 +1,6 @@
 using System;
-
-#if UNITY_EDITOR
 using Thisaislan.PersistenceEasyToDeleteInEditor.Editor;
-#else
 using Thisaislan.PersistenceEasyToDeleteInEditor.PedeComposition;
-#endif  
 
 namespace Thisaislan.PersistenceEasyToDeleteInEditor
 {
@@ -168,7 +164,29 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor
         #endregion //PlayerPrefsRegion
         
         #region FileRegion
+
+        /// <summary> Compress and serialize a object </summary>
+        /// <param name="value"> Object to be serialized. </param>
+        /// <param name="actionAfterSerialize">  Action that will be performed after the serialize process </param>
+        public static void Serialize<T>(T value, Action<byte[]> actionAfterSerialize)
+        {
+            CheckValueAsNull(value);
+            CheckActionAsNull(actionAfterSerialize);
+            
+            PedeFile.Serialize(value, actionAfterSerialize);
+        }
         
+        /// <summary> Decompress and deserialize a object. </summary>
+        /// <param name="value"> array of bytes to be deserialized. </param>
+        /// <param name="actionAfterDeserialize">  Action that will be performed after the deserialize process </param>
+        public static void Deserialize<T>(byte[] value, Action<T> actionAfterDeserialize)
+        {
+            CheckValueAsNull(value);
+            CheckActionAsNull(actionAfterDeserialize);
+            
+            PedeFile.Deserialize<T>(value, actionAfterDeserialize);
+        }
+
         /// <summary> Saves file with a specific key, type and value. </summary>
         /// <param name="key"> Key used to set the file. </param>
         /// <param name="value"> Object to be saved or a engine type. </param>
