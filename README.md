@@ -63,6 +63,8 @@ If you need more information about installing package from a Git URL, you can cl
 Currently, this is what PEDE does have
 | Features                   |       Status      |
 | -------------------------- | :----------------:|
+| Serialize                  |         ✔️         |
+| Deserialize                |         ✔️         |
 | SetPlayerPrefs             |         ✔️         |
 | GetPlayerPrefs             |         ✔️         |
 | DeletePlayerPrefsByKey     |         ✔️         |
