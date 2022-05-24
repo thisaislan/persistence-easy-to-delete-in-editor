@@ -1,5 +1,8 @@
 # Changelog
 
+#### v0.3.1:
+- Fix editor using in runtime
+
 #### v0.3.0:
 - Add serialization and deserialization methods
 

@@ -1,6 +1,9 @@
 using System;
-using Thisaislan.PersistenceEasyToDeleteInEditor.Editor;
 using Thisaislan.PersistenceEasyToDeleteInEditor.PedeComposition;
+
+#if UNITY_EDITOR
+using Thisaislan.PersistenceEasyToDeleteInEditor.Editor;
+#endif
 
 namespace Thisaislan.PersistenceEasyToDeleteInEditor
 {
