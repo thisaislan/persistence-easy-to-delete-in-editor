@@ -1,5 +1,10 @@
 # Changelog
 
+#### v0.3.2:
+- Remove the BinaryFormatter dependency
+- Rename PEDE folder to Pede
+- Update documentation to add JsonUtility information
+
 #### v0.3.1:
 - Fix editor using in runtime
 

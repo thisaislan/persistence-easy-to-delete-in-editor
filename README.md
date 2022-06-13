@@ -1,6 +1,6 @@
-# Persistence easy to delete in editor (PEDE) 
+# Persistence easy to delete in editor (Pede) 
 
-Persistence easy to delete in editor, or just PEDE, is a small library for easy saving and deleting common persistence in the unit editor.
+Persistence easy to delete in editor, or just Pede, is a small library for easy saving and deleting common persistence in the unit editor.
 
 Please note this is still in development! Check [Issues](https://github.com/thisaislan/persistence-easy-to-delete-in-editor/issues) for any current support issues or bugs that may exist!
 
@@ -18,6 +18,7 @@ Please note this is still in development! Check [Issues](https://github.com/this
 - [Installation](#Installation)
 - [Features](#Features)
 - [Support](#Support)
+- [Note](#Note)
 - [Thanks](#Thanks)
 - [License](#License)
 
@@ -39,14 +40,14 @@ Time for save an entire object:
     Pede.SetPlayerPrefs(key, someNonEngineObject);
 ```
 
-Ok, ok, you got the idea, but save an entire object in PlayerPrefs isn't a good idea, maybe you would rather to save a object in a file. In that case just ask to the PEDE:
+Ok, ok, you got the idea, but save an entire object in PlayerPrefs isn't a good idea, maybe you would rather to save a object in a file. In that case just ask to the Pede:
 ```csharp
     Pede.SetFile(key, someNonEngineObject);
 ```
 
 Additionally, any value saved in editor mode will be stored in a PedeData ScriptableObject, so you can change its values, type and key by inspector or just delete or duplicate it.
 
-For default PEDE create a folder named PEDE to create a PedeData if it doesn't exist, and put a ScriptableObject named PedeSettings in the Settings folder to point out which PedeData is being used at that moment .
+For default Pede create a folder named Pede to create a PedeData if it doesn't exist, and put a ScriptableObject named PedeSettings in the Settings folder to point out which PedeData is being used at that moment .
 
 ## Installation
 
@@ -60,7 +61,7 @@ If you need more information about installing package from a Git URL, you can cl
 
 ## Features
 
-Currently, this is what PEDE does have
+Currently, this is what Pede does have
 | Features                   |       Status      |
 | -------------------------- | :----------------:|
 | Serialize                  |         ✔️         |
@@ -81,6 +82,11 @@ Currently, this is what PEDE does have
 
 ## Support
 Please submit any queries, bugs or issues, to the [Issues](https://github.com/thisaislan/persistence-easy-to-delete-in-editor/issues) page on this repository. All feedback is appreciated as it not just helps myself find problems I didn't otherwise see, but also helps improve the project.
+
+
+## Note
+
+Pede uses JsonUtility this way it has all the limitations of that library.
 
 
 ## Thanks

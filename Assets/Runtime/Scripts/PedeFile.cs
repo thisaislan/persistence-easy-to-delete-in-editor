@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 using UnityEngine;
 
 namespace Thisaislan.PersistenceEasyToDeleteInEditor.PedeComposition
@@ -10,22 +10,15 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor.PedeComposition
 
         internal static void Serialize<T>(T value, Action<byte[]> actionAfterSerialize)
         {
-            var memoryStream = new MemoryStream();
             var compressedValue = GetCompressedStringValue(value);
+            var bytes = SerializeBytes(compressedValue);
 
-            BinaryFormatterSerialize(memoryStream, compressedValue);
-            
-            actionAfterSerialize(memoryStream.ToArray());
+            actionAfterSerialize(bytes);
         }
 
         public static void Deserialize<T>(byte[] value, Action<T> actionAfterDeserialize)
         {
-            var memoryStream = new MemoryStream();
-            
-            memoryStream.Write(value, 0, value.Length);
-            memoryStream.Seek(0, SeekOrigin.Begin);
-                
-            var decompressedValue = StringCompressor.DecompressString(BinaryFormatterDeserialize(memoryStream));
+            var decompressedValue = StringCompressor.DecompressString(DeserializeBytes(value));
             var obj = JsonUtility.FromJson<T>(decompressedValue);
 
             actionAfterDeserialize(obj);
@@ -33,14 +26,16 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor.PedeComposition
 
         internal static void SetFile<T>(string key, T value)
         {
+            var filePath = GetFullPath(key);
+            
             Directory.CreateDirectory(Constants.Consts.PedeFileRootFolderName);
             
-            var file = File.Create(GetFullPath(key));
-            var compressedValue = GetCompressedStringValue(value);
-
-            BinaryFormatterSerialize(file, compressedValue);
+            File.Create(filePath).Close();
             
-            file.Close();
+            var compressedValue = GetCompressedStringValue(value);
+            var bytes = SerializeBytes(compressedValue);
+            
+            File.WriteAllBytes(filePath, bytes);
         }
 
         internal static void GetFile<T>(
@@ -53,11 +48,10 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor.PedeComposition
             
             if (File.Exists(filePath))
             {
-                var file = File.Open(filePath, FileMode.Open);
-                var decompressedValue = StringCompressor.DecompressString(BinaryFormatterDeserialize(file));
-                var obj = JsonUtility.FromJson<T>(decompressedValue);
+                File.Open(filePath, FileMode.Open).Close();
                 
-                file.Close();
+                var decompressedValue = StringCompressor.DecompressString(DeserializeBytes(File.ReadAllBytes(filePath)));
+                var obj = JsonUtility.FromJson<T>(decompressedValue);
 
                 if (obj != null) { actionIfHasResult.Invoke(obj); }
                 
@@ -97,17 +91,11 @@ namespace Thisaislan.PersistenceEasyToDeleteInEditor.PedeComposition
             return StringCompressor.CompressString(strigValue);
         }
 
-        private static void BinaryFormatterSerialize(Stream serializationStream, string value)
-        {
-            var binaryFormatter = new BinaryFormatter();
-            binaryFormatter.Serialize(serializationStream, value);
-        }
+        private static byte[] SerializeBytes(string value) =>
+            Encoding.UTF8.GetBytes(value);
 
-        private static string BinaryFormatterDeserialize(Stream serializationStream)
-        {
-            var binaryFormatter = new BinaryFormatter();
-            return (string)binaryFormatter.Deserialize(serializationStream);
-        }
+        private static string DeserializeBytes(byte[]  bytes) =>
+            Encoding.UTF8.GetString(bytes, 0, bytes.Length);
 
         private static string GetFullPath(string key) =>
             String.Format(Constants.Consts.PedeFilePethFormat, Constants.Consts.PedeFileRootFolderName, key);
